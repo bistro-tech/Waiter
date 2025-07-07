@@ -1,12 +1,12 @@
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
 const cors = require("cors");
 
-var usersRouter = require("./routes/users");
+const usersRouter = require("./routes/users");
 
-var app = express();
+const app = express();
 const PORT = 3002;
 
 app.use(cors());
