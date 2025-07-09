@@ -42,51 +42,20 @@ router.get("/:id", async (req, res) => {
 
 // POST new user
 router.post("/CreateUser", async (req, res) => {
-  const { discord_name } = req.body;
-  const { id: discord_id } = req.params;
-  if (!discord_name) {
-    return res.status(400).json({ error: "discord_name requis" });
-  }
+  const { discord_id } = req.body;
 
   if (!discord_id) {
-    return res.status(400).json({ error: "discord_id requis" });
+    return res.status(400).json({ error: "discord_id requis dans le body" });
   }
 
   try {
     const result = await db.query(
-      "INSERT INTO users (discord_id, discord_name) VALUES ($1, $2) RETURNING *",
-      [discord_id, discord_name]
+      "INSERT INTO users (discord_id) VALUES ($1) RETURNING *",
+      [discord_id]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
     console.error("Erreur INSERT user:", err.message);
-    res.status(500).json({ error: "Erreur serveur" });
-  }
-});
-
-// PUT update discord_name
-router.put("/update/:id", async (req, res) => {
-  const { discord_name } = req.body;
-  const { id: discord_id } = req.params;
-
-  if (!discord_name) {
-    return res.status(400).json({ error: "discord_name requis" });
-  }
-
-  if (!discord_id) {
-    return res.status(400).json({ error: "discord_id requis" });
-  }
-
-  try {
-    const result = await db.query(
-      "UPDATE users SET discord_name = $1 WHERE discord_id = $2 RETURNING *",
-      [discord_name, req.params.id]
-    );
-    if (result.rows.length === 0)
-      return res.status(404).json({ error: "Utilisateur non trouvé" });
-    res.json(result.rows[0]);
-  } catch (err) {
-    console.error("Erreur UPDATE user:", err.message);
     res.status(500).json({ error: "Erreur serveur" });
   }
 });
@@ -96,12 +65,8 @@ router.put("/LastAnnoy/:id", async (req, res) => {
   const { id: discord_id } = req.params;
   const { last_annoy } = req.body;
 
-  if (!discord_id) {
-    return res.status(400).json({ error: "discord_id requis" });
-  }
-
   if (!last_annoy) {
-    return res.status(400).json({ error: "last_annoy requis" });
+    return res.status(400).json({ error: "last_annoy requis dans le body" });
   }
   try {
     const result = await db.query(
@@ -144,7 +109,7 @@ router.put("/LastAnnoyed/:id", async (req, res) => {
 });
 
 // DELETE user
-router.delete("/:id", async (req, res) => {
+router.delete("/delete/:id", async (req, res) => {
   const { id: discord_id } = req.params;
 
   if (!discord_id) {
