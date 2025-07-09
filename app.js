@@ -8,7 +8,7 @@ const usersRouter = require("./routes/users");
 const challengeRouter = require("./routes/challenge");
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT_API;
 
 app.use(cors());
 app.use(logger("dev"));
